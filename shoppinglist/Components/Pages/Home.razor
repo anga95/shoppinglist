@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@*@page "/"
 
 <h1>Hello, world!</h1>
 
@@ -18,9 +18,9 @@
     {
         message = $"Knappen trycktes! ({DateTime.Now:HH:mm:ss})";
     }
-}
+}*@
 
-@*@page "/"
+@page "/"
 @using shoppinglist.Models
 @inject shoppinglist.Services.ShoppingListService Service
 
@@ -68,4 +68,4 @@
         items = await Service.GetAllAsync();
         StateHasChanged();
     }
-}*@
+}
