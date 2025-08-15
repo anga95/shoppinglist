@@ -17,6 +17,7 @@ public static class MauiProgram
 
         // SQLite-fil i appens data-katalog
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "shoppinglist.db");
+        Console.WriteLine($"[DB] Path: {dbPath}");
         builder.Services.AddDbContext<ShoppingListDbContext>(options =>
             options.UseSqlite($"Data Source={dbPath}"));
 
