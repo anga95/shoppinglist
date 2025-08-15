@@ -1,59 +1,30 @@
 ﻿@page "/"
 @using shoppinglist.Models
 @inject shoppinglist.Services.ShoppingListService Service
+@inject shoppinglist.Pages.HomeViewModel VM
 
 <h3>Inköpslista</h3>
 
 <div style="display:flex;gap:.5rem;align-items:center">
-    <input @bind="newName" @bind:event="oninput" placeholder="Lägg till vara..." />
-    <button class="btn btn-primary" @onclick="AddAsync" disabled="@string.IsNullOrWhiteSpace(newName)">Lägg till</button>
-    <span>@status</span>
+    <input @bind="VM.NewName" @bind:event="oninput" placeholder="Lägg till vara..." />
+    <button class="btn btn-primary" @onclick="VM.AddAsync" disabled="@string.IsNullOrWhiteSpace(VM.NewName)">Lägg till</button>
+    <span>@VM.Status</span>
 </div>
 
 <ul>
-    @foreach (var it in items)
+    @foreach (var item in VM.Items)
     {
         <li style="display:flex;align-items:center;gap:.5rem">
             <input type="checkbox"
-                   @bind="it.IsChecked"
-                   @bind:after="async () => await Service.SetCheckedAsync(it.Id, it.IsChecked)" />
-            <span>@it.Name</span>
-            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteAsync(it.Id)">x</button>
+                   @bind="item.IsChecked"
+                   @bind:after="async () => await VM.ToggleAsync(item)" />
+            <span>@item.Name</span>
+            <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
         </li>
     }
 </ul>
 
 @code {
-    private List<Item> items = new();
-    private string newName = "";
-    private string status = "";
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            items = await Service.GetAllAsync();
-        }
-        catch (Exception ex)
-        {
-            status = "Fel:" + ex.Message;
-            Console.WriteLine(ex);
-        }
-    }
-
-    private async Task AddAsync()
-    {
-        var added = await Service.AddAsync(newName);
-        status = added is null ? "Tomt eller dubblett." : $"Lade till '{added.Name}'.";
-        if (added is not null) newName = "";
-        items = await Service.GetAllAsync();
-        StateHasChanged();
-    }
-
-    private async Task DeleteAsync(int id)
-    {
-        await Service.DeleteAsync(id);
-        items = await Service.GetAllAsync();
-        StateHasChanged();
-    }
+    protected override async Task OnInitializedAsync() => await VM.InitializeAsync();
 }

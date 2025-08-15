@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Storage;
 using shoppinglist.Data;
+using shoppinglist.Pages;
 using shoppinglist.Services;
 
 namespace shoppinglist;
@@ -22,6 +23,7 @@ public static class MauiProgram
             options.UseSqlite($"Data Source={dbPath}"));
 
         builder.Services.AddScoped<ShoppingListService>();
+        builder.Services.AddScoped<HomeViewModel>();
         builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
