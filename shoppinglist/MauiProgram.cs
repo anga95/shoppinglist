@@ -29,6 +29,7 @@ public static class MauiProgram
 
         builder.Services.AddScoped<ShoppingListService>();
         builder.Services.AddScoped<HomeViewModel>();
+        builder.Services.AddScoped<RecipieService>();
         builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
