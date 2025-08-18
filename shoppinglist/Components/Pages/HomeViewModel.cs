@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+using Shoppinglist.Data.Models;
 using shoppinglist.Models;
 using shoppinglist.Services;
 
-namespace shoppinglist.Pages;
+namespace shoppinglist.Components.Pages;
 
 public class HomeViewModel
 {

@@ -1,8 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
-using shoppinglist.Data;
-using shoppinglist.Pages;
+using shoppinglist.Components.Pages;
+using Shoppinglist.Data;
 using shoppinglist.Services;
 
 namespace shoppinglist;
@@ -36,7 +41,7 @@ public static class MauiProgram
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<ShoppingListDbContext>();
-            db.Database.EnsureCreated();
+            db.Database.Migrate();
         }
 
         return app;
