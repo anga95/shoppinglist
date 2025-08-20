@@ -1,35 +1,35 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Shoppinglist.Data.Models;
-using shoppinglist.Models;
 using shoppinglist.Services;
 
-namespace shoppinglist.Components.Pages;
+namespace shoppinglist.Components.ViewModels;
 
 public class HomeViewModel : IDisposable
 {
     private readonly ShoppingListService _service;
     private readonly AppEvents _events;
 
-    public Items Items { get; } = new();
+    public List<Item> Items { get; private set; } = new();
     public string NewName { get; set; } = "";
     public string Status { get; private set; } = "";
     
-    public event Action Changed;
-    private void RaiseChanged() => Changed?.Invoke();
+    public event Func<Task>? ItemsChanged;
+    public Task RaiseChanged() => ItemsChanged?.Invoke() ?? Task.CompletedTask;
 
     public HomeViewModel(ShoppingListService service, AppEvents events)
     {
         _service = service;
         _events = events;
-        
-        _events.ItemsChanged += OnItemsChanged;
+        _events.ItemsChanged += OnItemsChangedAsync;
     }
 
     public async Task InitializeAsync()
     {
-        var loaded = await _service.GetAllAsync();
-        Items.Set(loaded);
+        Items = OrderForDisplay(await _service.GetAllAsync()); 
         RaiseChanged();
     }
 
@@ -41,33 +41,67 @@ public class HomeViewModel : IDisposable
         {
             NewName = "";
             Items.Add(added);
+            Items = OrderForDisplay(Items);
             RaiseChanged();
         }
     }
 
     public async Task ToggleAsync(Item item)
     {
-        await _service.SetCheckedAsync(item.Id, item.IsChecked);
-        Items.NotifyToggled(item);
-        RaiseChanged();
+        bool original = item.IsChecked;
+        try
+        {
+            await _service.SetCheckedAsync(item.Id, item.IsChecked);
+            Items = OrderForDisplay(Items);
+        }
+        catch (Exception ex)
+        {
+            item.IsChecked = original;
+            Status = $"Fel vid uppdatering: {ex.Message}";
+        }
+        finally { RaiseChanged(); }
     }
 
     public async Task DeleteAsync(int id)
     {
-        await _service.DeleteAsync(id);
-        Items.RemoveById(id);
+        var backup = Items;
+        Items = Items.Where(i => i.Id != id).ToList();
         RaiseChanged();
+
+        try { await _service.DeleteAsync(id); }
+        catch (Exception ex)
+        {
+            Items = backup;
+            Status = $"Fel vid borttagning: {ex.Message}";
+            RaiseChanged();
+        }
     }
 
-    private async void OnItemsChanged()
+    private async Task OnItemsChangedAsync()
     {
-        var updated = await _service.GetAllAsync();
-        Items.Set(updated);
-        RaiseChanged();
+        try
+        {
+            Items = OrderForDisplay(await _service.GetAllAsync());
+            RaiseChanged();
+        }
+        catch (Exception ex)
+        {
+            Status = $"Fel vid uppdatering: {ex.Message}";
+            RaiseChanged();
+        }
+    }
+
+    private static List<Item> OrderForDisplay(IEnumerable<Item> src)
+    {
+        var items = src.OrderBy(i => i.IsChecked)
+            .ThenBy(i => i.MovedAt)
+            .ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        return items;
     }
     
     public void Dispose()
     {
-        _events.ItemsChanged -= OnItemsChanged;
+        _events.ItemsChanged -= OnItemsChangedAsync;
     }
 }

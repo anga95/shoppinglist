@@ -1,3 +1,4 @@
+@using shoppinglist.Components.ViewModels
 @inject RecipiesMenuViewModel VM
 
 <button class="btn btn-outline-light" @onclick="VM.ToggleMenu">Recept ▼</button>
@@ -6,13 +7,13 @@
 {
     <div class="rec-backdrop" @onclick="VM.CloseMenu"></div>
     <div class="rec-menu" @onclick:stopPropagation="true">
-        @if (VM.List.Count == 0)
+        @if (VM.Recipies.Count == 0)
         {
             <div class="p-2 text-muted">Inga recept ännu</div>
         }
         else
         {
-            @foreach (var r in VM.List)
+            @foreach (var r in VM.Recipies)
             {
                 <div class="rec-item">
                     <div class="rec-head" @onclick="() => VM.ToggleRec(r.Id)">
@@ -22,10 +23,10 @@
 
                     @if (VM.Expanded.Contains(r.Id))
                     {
+                        var items = RecipiesMenuViewModel.OrderForDisplay(r.RecipieItems.Select(ri => ri.Item));
                         <ul class="rec-ingredients">
-                            @foreach (var ri in r.RecipieItems.OrderBy(x => x.Item.IsChecked).ThenBy(x => x.Item.Name))
+                            @foreach (var it in items)
                             {
-                                var it = ri.Item;
                                 <li @key="it.Id">
                                     <input type="checkbox"
                                            @bind="@it.IsChecked"

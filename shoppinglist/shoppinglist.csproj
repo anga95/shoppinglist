@@ -62,8 +62,4 @@
       <ProjectReference Include="..\Shoppinglist.Data\Shoppinglist.Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Data\" />
-    </ItemGroup>
-
 </Project>

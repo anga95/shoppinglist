@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Storage;
-using shoppinglist.Components.Pages;
+using shoppinglist.Components.ViewModels;
 using Shoppinglist.Data;
 using shoppinglist.Services;
 

@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Shoppinglist.Data.Models;
 using shoppinglist.Services;
 
-public class RecipiesMenuViewModel
+namespace shoppinglist.Components.ViewModels;
+
+public class RecipiesMenuViewModel : IDisposable
 {
     private readonly RecipieService _recipies;
     private readonly ShoppingListService _shoppingList;
     private readonly AppEvents _events;
 
-    public List<Recipie> List { get; private set; } = new();
+    public List<Recipie> Recipies { get; private set; } = new();
     public HashSet<int> Expanded { get; } = new();
     public bool Open { get; private set; }
 
@@ -22,13 +25,15 @@ public class RecipiesMenuViewModel
         _recipies = recipies;
         _shoppingList = shopping;
         _events = events;
-        _events.RecipiesChanged += async () => await Reload();
-        _events.ItemsChanged += async () => await Reload();
+        _events.RecipiesChanged += OnEventsChanged;
+        _events.ItemsChanged += OnEventsChanged;
     }
+    
+    private void OnEventsChanged() => _ = Reload();
 
     public async Task InitAsync()
     {
-        List = await _recipies.GetAllWithItemsAsync();
+        Recipies = await _recipies.GetAllWithItemsAsync();
         RaiseChanged();
     }
 
@@ -47,9 +52,18 @@ public class RecipiesMenuViewModel
         await Reload();
     }
 
-    public async Task Reload()
+    private async Task Reload()
     {
-        List = await _recipies.GetAllWithItemsAsync();
+        Recipies = await _recipies.GetAllWithItemsAsync();
         RaiseChanged();
+    }
+    public static IEnumerable<Item> OrderForDisplay(IEnumerable<Item> items) =>
+        items.OrderBy(i => i.IsChecked)
+            .ThenBy(i => i.MovedAt)
+            .ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase);
+    public void Dispose()
+    {
+        _events.RecipiesChanged -= OnEventsChanged;
+        _events.ItemsChanged -= OnEventsChanged;
     }
 }
