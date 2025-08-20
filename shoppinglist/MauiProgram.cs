@@ -27,9 +27,12 @@ public static class MauiProgram
         builder.Services.AddDbContext<ShoppingListDbContext>(options =>
             options.UseSqlite($"Data Source={dbPath}"));
 
+        builder.Services.AddSingleton<AppEvents>();
         builder.Services.AddScoped<ShoppingListService>();
-        builder.Services.AddScoped<HomeViewModel>();
         builder.Services.AddScoped<RecipieService>();
+        builder.Services.AddScoped<HomeViewModel>();
+        builder.Services.AddScoped<RecipiesMenuViewModel>();
+
         builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG

@@ -1,0 +1,20 @@
+.rec-backdrop{
+    position: fixed; inset: 0;
+    background: transparent;
+    z-index: 999;
+}
+.rec-menu{
+    position: absolute; left: .75rem; top: 3rem;
+    min-width: 260px; max-height: 60vh; overflow:auto;
+    background: #222; color:#fff; border:1px solid #444; border-radius: .5rem;
+    box-shadow: 0 10px 24px rgba(0,0,0,.4); z-index: 1000;
+}
+.rec-item{ border-bottom:1px solid #333; }
+.rec-item:last-child{ border-bottom:none; }
+.rec-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:.6rem .8rem; cursor:pointer; font-weight:600;
+}
+.rec-head:hover{ background:#2d2d2d; }
+.rec-ingredients{ list-style:none; margin:0; padding:.25rem .9rem .7rem 1rem; }
+.rec-ingredients li{ display:flex; align-items:center; gap:.5rem; padding:.2rem 0; }

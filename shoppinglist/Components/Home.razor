@@ -1,7 +1,8 @@
 ﻿@page "/"
-@using shoppinglist.Models
+@using shoppinglist.Services
 @inject shoppinglist.Services.ShoppingListService Service
 @inject shoppinglist.Components.Pages.HomeViewModel VM
+@inject AppEvents Events
 
 <h3>Inköpslista</h3>
 
@@ -26,5 +27,12 @@
 
 @code {
 
-    protected override async Task OnInitializedAsync() => await VM.InitializeAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        VM.Changed += OnVmChanged;
+        await VM.InitializeAsync();
+    }
+
+    private void OnVmChanged() => InvokeAsync(StateHasChanged);
+    public void Dispose() => VM.Changed -= OnVmChanged;
 }

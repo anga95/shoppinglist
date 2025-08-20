@@ -1,46 +1,36 @@
-@using Shoppinglist.Data.Models
-@using shoppinglist.Services
-@inject RecipieService Recipies
-@inject NavigationManager Nav
+@inject RecipiesMenuViewModel VM
 
-<button class="btn btn-outline-light" @onclick="ToggleMenu">Recept ▼</button>
+<button class="btn btn-outline-light" @onclick="VM.ToggleMenu">Recept ▼</button>
 
-@if (open)
+@if (VM.Open)
 {
+    <div class="rec-backdrop" @onclick="VM.CloseMenu"></div>
     <div class="rec-menu" @onclick:stopPropagation="true">
-        <div class="p-2" style="border-bottom:1px solid #333;">
-            <button class="btn btn-sm btn-success" @onclick="GoNew">➕ Nytt recept</button>
-        </div>
-        
-        @if (list is null)
-        {
-            <div class="p-2 text-muted">Laddar...</div>
-        }
-        else if (list.Count == 0)
+        @if (VM.List.Count == 0)
         {
             <div class="p-2 text-muted">Inga recept ännu</div>
         }
         else
         {
-            @foreach (var recipie in list)
+            @foreach (var r in VM.List)
             {
                 <div class="rec-item">
-                    <div class="rec-head" @onclick="() => ToggleRec(recipie.Id)">
-                        <span>@recipie.Title</span>
-                        <span>@(expanded.Contains(recipie.Id) ? "▲" : "▼")</span>
+                    <div class="rec-head" @onclick="() => VM.ToggleRec(r.Id)">
+                        <span>@r.Title</span>
+                        <span>@(VM.Expanded.Contains(r.Id) ? "▲" : "▼")</span>
                     </div>
 
-                    @if (expanded.Contains(recipie.Id))
+                    @if (VM.Expanded.Contains(r.Id))
                     {
                         <ul class="rec-ingredients">
-                            @* ocheckade först, sedan checkade *@
-                            @foreach (var ri in recipie.RecipieItems
-                                          .OrderBy(x => x.Item.IsChecked)
-                                          .ThenBy(x => x.Item.Name))
+                            @foreach (var ri in r.RecipieItems.OrderBy(x => x.Item.IsChecked).ThenBy(x => x.Item.Name))
                             {
-                                <li>
-                                    <input type="checkbox" disabled checked="@ri.Item.IsChecked"/>
-                                    <span class="@((ri.Item.IsChecked ? "text-muted" : ""))">@ri.Item.Name</span>
+                                var it = ri.Item;
+                                <li @key="it.Id">
+                                    <input type="checkbox"
+                                           @bind="@it.IsChecked"
+                                           @bind:after="async () =>  await VM.SetIngredientCheckedAsync(it)"/>
+                                    <span class="@(it.IsChecked ? "text-muted" : null)">@it.Name</span>
                                 </li>
                             }
                         </ul>
@@ -51,50 +41,13 @@
     </div>
 }
 
-
 @code {
-    private bool open;
-    private List<Recipie>? list;
-    private HashSet<int> expanded = new();
-
     protected override async Task OnInitializedAsync()
     {
-        list = await Recipies.GetAllWithItemsAsync();
-        StateHasChanged();
-        _ = Task.Run(RegisterCloseOnOutsideClick);
+        VM.Changed += OnChanged;
+        await VM.InitAsync();
     }
-
-    private void ToggleMenu() => open = !open;
-
-    private void ToggleRec(int id)
-    {
-        if (!expanded.Add(id)) expanded.Remove(id);
-    }
-
-    private async Task RegisterCloseOnOutsideClick()
-    {
-        await Task.CompletedTask;
-    }
-    
-    private void GoNew() { open = false; Nav.NavigateTo("/recipies/new"); }
-
-
+    void OnChanged() => InvokeAsync(StateHasChanged);
+    public void Dispose() => VM.Changed -= OnChanged;
 }
 
-<style>
-.rec-menu{
-  position: absolute; right: .75rem; top: 3rem;
-  min-width: 260px; max-height: 60vh; overflow:auto;
-  background: #222; color:#fff; border:1px solid #444; border-radius: .5rem;
-  box-shadow: 0 10px 24px rgba(0,0,0,.4); z-index: 1000;
-}
-.rec-item{ border-bottom:1px solid #333; }
-.rec-item:last-child{ border-bottom:none; }
-.rec-head{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:.6rem .8rem; cursor:pointer; font-weight:600;
-}
-.rec-head:hover{ background:#2d2d2d; }
-.rec-ingredients{ list-style:none; margin:0; padding:.25rem .9rem .7rem 1rem; }
-.rec-ingredients li{ display:flex; align-items:center; gap:.5rem; padding:.2rem 0; }
-</style>

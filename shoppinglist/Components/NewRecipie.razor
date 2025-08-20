@@ -1,0 +1,75 @@
+@page "/recipies/new"
+@using Shoppinglist.Data.Models
+@using shoppinglist.Services
+@inject RecipieService Recipies
+@inject NavigationManager Nav
+@inject AppEvents Events
+
+<h3>Nytt recept</h3>
+
+<div class="mb-3">
+    <label>Titel</label>
+    <input class="form-control" @bind="_title" />
+</div>
+
+<h5>Ingredienser</h5>
+@for (int ingredientIndex = 0; ingredientIndex < _ingredients.Count; ingredientIndex++)
+{
+    var idx = ingredientIndex;
+    <div class="d-flex gap-2 mb-2" @key="idx">
+        <input class="form-control" 
+               placeholder="Ingrediens..."
+               value="@_ingredients[idx]"
+               @oninput="(ChangeEventArgs e) => _ingredients[idx] = e.Value?.ToString() ?? string.Empty"/>
+        <button class="btn btn-outline-danger" @onclick="(() => RemoveRow(idx))">Ta bort</button>
+    </div>
+}
+<button class="btn btn-outline-secondary mb-3" @onclick="AddRow">+ Lägg till rad</button>
+
+<div class="d-flex gap-2 mb-3">
+    <button class="btn btn-outline-primary" @onclick="Save" disabled="@string.IsNullOrWhiteSpace(_title)">Spara</button>
+    <button class="btn btn-secondary" @onclick="Cancel">Avbryt</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(_message))
+{
+    <p class="mt-3">@_message</p>
+}
+
+
+@code {
+    private string _title = string.Empty;
+    private List<string> _ingredients = new() { "" };
+    private string? _message;
+
+    void AddRow() => _ingredients.Add("");
+
+    void RemoveRow(int index)
+    {
+        if (index >= 0 && index < _ingredients.Count)
+        {
+            _ingredients.RemoveAt(index);
+        }
+    }
+
+    async Task Save()
+    {
+        var names = _ingredients
+            .Select(s => (s ?? string.Empty).Trim())
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        
+        if (string.IsNullOrWhiteSpace(_title) || names.Count == 0)
+        {
+            _message = "Ange titel och minst en ingrdiens.";
+            return;
+        }
+
+        await Recipies.CreateWithItemsAsync(_title, names);
+        Events.RaiseRecipiesChanged();
+        Nav.NavigateTo("/");
+    }
+    void Cancel() => Nav.NavigateTo("/");
+    
+}
