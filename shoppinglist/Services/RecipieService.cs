@@ -93,6 +93,7 @@ public class RecipieService
         _db.Recipies.Remove(recipie);
         await _db.SaveChangesAsync();
         await _events.RaiseRecipiesChangedAsync();
+
     }
 
     public async Task SetItemCheckedAsync(int itemId, bool value)
@@ -104,5 +105,6 @@ public class RecipieService
         it.MovedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
         await _events.RaiseItemsChangedAsync();
+
     }
 }

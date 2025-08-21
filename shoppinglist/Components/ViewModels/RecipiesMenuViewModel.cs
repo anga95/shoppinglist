@@ -28,6 +28,7 @@ public class RecipiesMenuViewModel : ViewModelBase
 
     private Task OnEventsChanged() => Reload();
 
+
     public async Task InitAsync()
     {
         Recipies = await _recipies.GetAllWithItemsAsync();
