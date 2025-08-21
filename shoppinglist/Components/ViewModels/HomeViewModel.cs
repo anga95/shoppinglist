@@ -29,8 +29,8 @@ public class HomeViewModel : IDisposable
 
     public async Task InitializeAsync()
     {
-        Items = OrderForDisplay(await _service.GetAllAsync()); 
-        RaiseChanged();
+        Items = OrderForDisplay(await _service.GetAllAsync());
+        await RaiseChanged();
     }
 
     public async Task AddAsync()
@@ -42,7 +42,7 @@ public class HomeViewModel : IDisposable
             NewName = "";
             Items.Add(added);
             Items = OrderForDisplay(Items);
-            RaiseChanged();
+            await RaiseChanged();
         }
     }
 
@@ -59,21 +59,21 @@ public class HomeViewModel : IDisposable
             item.IsChecked = original;
             Status = $"Fel vid uppdatering: {ex.Message}";
         }
-        finally { RaiseChanged(); }
+        finally { await RaiseChanged(); }
     }
 
     public async Task DeleteAsync(int id)
     {
         var backup = Items;
         Items = Items.Where(i => i.Id != id).ToList();
-        RaiseChanged();
+        await RaiseChanged();
 
         try { await _service.DeleteAsync(id); }
         catch (Exception ex)
         {
             Items = backup;
             Status = $"Fel vid borttagning: {ex.Message}";
-            RaiseChanged();
+            await RaiseChanged();
         }
     }
 
@@ -82,12 +82,12 @@ public class HomeViewModel : IDisposable
         try
         {
             Items = OrderForDisplay(await _service.GetAllAsync());
-            RaiseChanged();
+            await RaiseChanged();
         }
         catch (Exception ex)
         {
             Status = $"Fel vid uppdatering: {ex.Message}";
-            RaiseChanged();
+            await RaiseChanged();
         }
     }
 

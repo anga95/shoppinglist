@@ -34,7 +34,7 @@ public class ShoppingListService
         var item = new Item { Name = trimmed, IsChecked = false };
         _db.Items.Add(item);
         await _db.SaveChangesAsync();
-        _events.RaiseItemsChanged();
+        await _events.RaiseItemsChanged();
         return item;
     }
 
@@ -48,7 +48,7 @@ public class ShoppingListService
             item.IsChecked = value;
             item.MovedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
-            _events.RaiseItemsChanged();
+            await _events.RaiseItemsChanged();
         }
     }
 
@@ -58,6 +58,6 @@ public class ShoppingListService
         if (item is null) return;
         _db.Items.Remove(item);
         await _db.SaveChangesAsync();
-        _events.RaiseItemsChanged();
+        await _events.RaiseItemsChanged();
     }
 }

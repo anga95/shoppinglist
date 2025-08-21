@@ -48,7 +48,7 @@
         VM.Changed += OnChanged;
         await VM.InitAsync();
     }
-    void OnChanged() => InvokeAsync(StateHasChanged);
+    async void OnChanged() => await InvokeAsync(StateHasChanged);
     public void Dispose() => VM.Changed -= OnChanged;
 }
 
