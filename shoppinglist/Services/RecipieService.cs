@@ -99,7 +99,7 @@ public class RecipieService
     {
         var it = await _db.Items.FindAsync(itemId);
         if (it is null) return;
-        
+
         it.IsChecked = value;
         it.MovedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
