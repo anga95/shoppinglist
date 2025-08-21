@@ -33,6 +33,6 @@
         await VM.InitializeAsync();
     }
 
-    private void OnVmChanged() => InvokeAsync(StateHasChanged);
+    private async Task OnVmChanged() => await InvokeAsync(StateHasChanged);
     public void Dispose() => VM.ItemsChanged -= OnVmChanged;
 }

@@ -16,7 +16,7 @@
             @foreach (var r in VM.Recipies)
             {
                 <div class="rec-item">
-                    <div class="rec-head" @onclick="() => VM.ToggleRec(r.Id)">
+                    <div class="rec-head" @onclick="async () => await VM.ToggleRec(r.Id)">
                         <span>@r.Title</span>
                         <span>@(VM.Expanded.Contains(r.Id) ? "▲" : "▼")</span>
                     </div>
@@ -48,7 +48,7 @@
         VM.Changed += OnChanged;
         await VM.InitAsync();
     }
-    void OnChanged() => InvokeAsync(StateHasChanged);
+    private Task OnChanged() => InvokeAsync(StateHasChanged);
     public void Dispose() => VM.Changed -= OnChanged;
 }
 

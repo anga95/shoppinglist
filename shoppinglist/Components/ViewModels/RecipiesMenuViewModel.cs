@@ -17,8 +17,8 @@ public class RecipiesMenuViewModel : IDisposable
     public HashSet<int> Expanded { get; } = new();
     public bool Open { get; private set; }
 
-    public event Action? Changed;
-    void RaiseChanged() => Changed?.Invoke();
+    public event Func<Task>? Changed;
+    Task RaiseChanged() => Changed?.Invoke() ?? Task.CompletedTask;
 
     public RecipiesMenuViewModel(RecipieService recipies, ShoppingListService shopping, AppEvents events)
     {
@@ -28,22 +28,31 @@ public class RecipiesMenuViewModel : IDisposable
         _events.RecipiesChanged += OnEventsChanged;
         _events.ItemsChanged += OnEventsChanged;
     }
-    
-    private void OnEventsChanged() => _ = Reload();
+
+    private async Task OnEventsChanged() => await Reload();
 
     public async Task InitAsync()
     {
         Recipies = await _recipies.GetAllWithItemsAsync();
-        RaiseChanged();
+        await RaiseChanged();
     }
 
-    public void ToggleMenu() { Open = !Open; RaiseChanged(); }
-    public void CloseMenu() { Open = false; RaiseChanged(); }
+    public Task ToggleMenu()
+    {
+        Open = !Open;
+        return RaiseChanged();
+    }
 
-    public void ToggleRec(int id)
+    public Task CloseMenu()
+    {
+        Open = false;
+        return RaiseChanged();
+    }
+
+    public Task ToggleRec(int id)
     {
         if (!Expanded.Add(id)) Expanded.Remove(id);
-        RaiseChanged();
+        return RaiseChanged();
     }
 
     public async Task SetIngredientCheckedAsync(Item item)
@@ -55,7 +64,7 @@ public class RecipiesMenuViewModel : IDisposable
     private async Task Reload()
     {
         Recipies = await _recipies.GetAllWithItemsAsync();
-        RaiseChanged();
+        await RaiseChanged();
     }
     public static IEnumerable<Item> OrderForDisplay(IEnumerable<Item> items) =>
         items.OrderBy(i => i.IsChecked)
