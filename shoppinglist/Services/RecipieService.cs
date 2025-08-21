@@ -92,6 +92,7 @@ public class RecipieService
         
         _db.Recipies.Remove(recipie);
         await _db.SaveChangesAsync();
+
         await _events.RaiseRecipiesChanged();
     }
 

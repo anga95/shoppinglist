@@ -46,6 +46,7 @@ public class ShoppingListService
             item.IsChecked = value;
             item.MovedAt = DateTime.UtcNow;
             await _db.SaveChangesAsync();
+
             await _events.RaiseItemsChanged();
         }
     }
