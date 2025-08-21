@@ -1,4 +1,5 @@
 @using shoppinglist.Components.ViewModels
+@using shoppinglist.Services
 @inject RecipiesMenuViewModel VM
 
 <button class="btn btn-outline-light" @onclick="VM.ToggleMenu">Recept ▼</button>
@@ -23,7 +24,7 @@
 
                     @if (VM.Expanded.Contains(r.Id))
                     {
-                        var items = RecipiesMenuViewModel.OrderForDisplay(r.RecipieItems.Select(ri => ri.Item));
+                        var items = r.RecipieItems.Select(ri => ri.Item).OrderForDisplay();
                         <ul class="rec-ingredients">
                             @foreach (var it in items)
                             {
