@@ -20,9 +20,7 @@ public class ShoppingListService
 
     public Task<List<Item>> GetAllAsync() =>
         _db.Items
-            .OrderBy(i => i.IsChecked)
-            .ThenBy(i => i.MovedAt)
-            .ThenBy(i => i.Name)
+            .OrderForDisplay()
             .ToListAsync();
 
     public async Task<Item?> AddAsync(string name)

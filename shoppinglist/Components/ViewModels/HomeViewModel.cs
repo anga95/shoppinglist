@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Shoppinglist.Data.Models;
 using shoppinglist.Services;
 
@@ -29,7 +28,7 @@ public class HomeViewModel : IDisposable
 
     public async Task InitializeAsync()
     {
-        Items = OrderForDisplay(await _service.GetAllAsync()); 
+        Items = (await _service.GetAllAsync()).OrderForDisplay().ToList();
         RaiseChanged();
     }
 
@@ -41,7 +40,7 @@ public class HomeViewModel : IDisposable
         {
             NewName = "";
             Items.Add(added);
-            Items = OrderForDisplay(Items);
+            Items = Items.OrderForDisplay().ToList();
             RaiseChanged();
         }
     }
@@ -52,7 +51,7 @@ public class HomeViewModel : IDisposable
         try
         {
             await _service.SetCheckedAsync(item.Id, item.IsChecked);
-            Items = OrderForDisplay(Items);
+            Items = Items.OrderForDisplay().ToList();
         }
         catch (Exception ex)
         {
@@ -81,7 +80,7 @@ public class HomeViewModel : IDisposable
     {
         try
         {
-            Items = OrderForDisplay(await _service.GetAllAsync());
+            Items = (await _service.GetAllAsync()).OrderForDisplay().ToList();
             RaiseChanged();
         }
         catch (Exception ex)
@@ -91,15 +90,6 @@ public class HomeViewModel : IDisposable
         }
     }
 
-    private static List<Item> OrderForDisplay(IEnumerable<Item> src)
-    {
-        var items = src.OrderBy(i => i.IsChecked)
-            .ThenBy(i => i.MovedAt)
-            .ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-        return items;
-    }
-    
     public void Dispose()
     {
         _events.ItemsChanged -= OnItemsChangedAsync;

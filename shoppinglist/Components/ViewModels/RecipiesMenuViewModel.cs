@@ -57,10 +57,7 @@ public class RecipiesMenuViewModel : IDisposable
         Recipies = await _recipies.GetAllWithItemsAsync();
         RaiseChanged();
     }
-    public static IEnumerable<Item> OrderForDisplay(IEnumerable<Item> items) =>
-        items.OrderBy(i => i.IsChecked)
-            .ThenBy(i => i.MovedAt)
-            .ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase);
+
     public void Dispose()
     {
         _events.RecipiesChanged -= OnEventsChanged;
