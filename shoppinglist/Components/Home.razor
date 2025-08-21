@@ -29,10 +29,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        VM.ItemsChanged += OnVmChanged;
+        VM.Changed += OnVmChanged;
         await VM.InitializeAsync();
     }
 
     private void OnVmChanged() => InvokeAsync(StateHasChanged);
-    public void Dispose() => VM.ItemsChanged -= OnVmChanged;
+    public void Dispose() => VM.Changed -= OnVmChanged;
 }
