@@ -9,25 +9,15 @@ public class AppEvents
     public event Func<Task>? RecipiesChanged;
     public event Func<Task>? ItemsChanged;
 
-    public async Task RaiseRecipiesChangedAsync()
-    {
-        if (RecipiesChanged is { } handlers)
-        {
-            var tasks = handlers.GetInvocationList()
-                .Cast<Func<Task>>()
-                .Select(h => h());
-            await Task.WhenAll(tasks);
-        }
-    }
+    public Task RaiseRecipiesChanged() => InvokeAsync(RecipiesChanged);
+    public Task RaiseItemsChanged() => InvokeAsync(ItemsChanged);
 
-    public async Task RaiseItemsChangedAsync()
+    private static async Task InvokeAsync(Func<Task>? handlers)
     {
-        if (ItemsChanged is { } handlers)
+        if (handlers is null) return;
+        foreach (var handler in handlers.GetInvocationList().Cast<Func<Task>>())
         {
-            var tasks = handlers.GetInvocationList()
-                .Cast<Func<Task>>()
-                .Select(h => h());
-            await Task.WhenAll(tasks);
+            await handler();
         }
     }
 }
