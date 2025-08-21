@@ -25,7 +25,7 @@ public class HomeViewModel : ViewModelBase
 
     public async Task InitializeAsync()
     {
-        Items = OrderForDisplay(await _service.GetAllAsync()); 
+        Items = (await _service.GetAllAsync()).OrderForDisplay().ToList();
         RaiseChanged();
     }
 
@@ -37,7 +37,7 @@ public class HomeViewModel : ViewModelBase
         {
             NewName = "";
             Items.Add(added);
-            Items = OrderForDisplay(Items);
+            Items = Items.OrderForDisplay().ToList();
             RaiseChanged();
         }
     }
@@ -48,7 +48,7 @@ public class HomeViewModel : ViewModelBase
         try
         {
             await _service.SetCheckedAsync(item.Id, item.IsChecked);
-            Items = OrderForDisplay(Items);
+            Items = Items.OrderForDisplay().ToList();
         }
         catch (Exception ex)
         {
@@ -77,7 +77,7 @@ public class HomeViewModel : ViewModelBase
     {
         try
         {
-            Items = OrderForDisplay(await _service.GetAllAsync());
+            Items = (await _service.GetAllAsync()).OrderForDisplay().ToList();
             RaiseChanged();
         }
         catch (Exception ex)
@@ -85,15 +85,6 @@ public class HomeViewModel : ViewModelBase
             Status = $"Fel vid uppdatering: {ex.Message}";
             RaiseChanged();
         }
-    }
-
-    private static List<Item> OrderForDisplay(IEnumerable<Item> src)
-    {
-        var items = src.OrderBy(i => i.IsChecked)
-            .ThenBy(i => i.MovedAt)
-            .ThenBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-        return items;
     }
     
     public override void Dispose()
