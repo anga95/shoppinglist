@@ -33,7 +33,6 @@ public class ShoppingListService
         _db.Items.Add(item);
         await _db.SaveChangesAsync();
         await _events.RaiseItemsChangedAsync();
-
         return item;
     }
 
@@ -58,6 +57,5 @@ public class ShoppingListService
         _db.Items.Remove(item);
         await _db.SaveChangesAsync();
         await _events.RaiseItemsChangedAsync();
-
     }
 }

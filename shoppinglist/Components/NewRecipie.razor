@@ -67,7 +67,7 @@
         }
 
         await Recipies.CreateWithItemsAsync(_title, names);
-        await Events.RaiseRecipiesChanged();
+        await Events.RaiseRecipiesChangedAsync();
 
         Nav.NavigateTo("/");
     }
