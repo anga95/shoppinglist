@@ -7,7 +7,7 @@ using shoppinglist.Services;
 
 namespace shoppinglist.Components.ViewModels;
 
-public class HomeViewModel : IDisposable
+public class HomeViewModel : ViewModelBase
 {
     private readonly ShoppingListService _service;
     private readonly AppEvents _events;
@@ -15,11 +15,8 @@ public class HomeViewModel : IDisposable
     public List<Item> Items { get; private set; } = new();
     public string NewName { get; set; } = "";
     public string Status { get; private set; } = "";
-    
-    public event Func<Task>? ItemsChanged;
-    public Task RaiseChanged() => ItemsChanged?.Invoke() ?? Task.CompletedTask;
 
-    public HomeViewModel(ShoppingListService service, AppEvents events)
+    public HomeViewModel(ShoppingListService service, AppEvents events) : base()
     {
         _service = service;
         _events = events;
@@ -89,9 +86,10 @@ public class HomeViewModel : IDisposable
             RaiseChanged();
         }
     }
-
-    public void Dispose()
+    
+    public override void Dispose()
     {
         _events.ItemsChanged -= OnItemsChangedAsync;
+        base.Dispose();
     }
 }

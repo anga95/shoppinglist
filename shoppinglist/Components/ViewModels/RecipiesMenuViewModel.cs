@@ -7,7 +7,7 @@ using shoppinglist.Services;
 
 namespace shoppinglist.Components.ViewModels;
 
-public class RecipiesMenuViewModel : IDisposable
+public class RecipiesMenuViewModel : ViewModelBase
 {
     private readonly RecipieService _recipies;
     private readonly ShoppingListService _shoppingList;
@@ -17,10 +17,7 @@ public class RecipiesMenuViewModel : IDisposable
     public HashSet<int> Expanded { get; } = new();
     public bool Open { get; private set; }
 
-    public event Action? Changed;
-    void RaiseChanged() => Changed?.Invoke();
-
-    public RecipiesMenuViewModel(RecipieService recipies, ShoppingListService shopping, AppEvents events)
+    public RecipiesMenuViewModel(RecipieService recipies, ShoppingListService shopping, AppEvents events) : base()
     {
         _recipies = recipies;
         _shoppingList = shopping;
@@ -57,10 +54,11 @@ public class RecipiesMenuViewModel : IDisposable
         Recipies = await _recipies.GetAllWithItemsAsync();
         RaiseChanged();
     }
-
-    public void Dispose()
+    
+    public override void Dispose()
     {
         _events.RecipiesChanged -= OnEventsChanged;
         _events.ItemsChanged -= OnEventsChanged;
+        base.Dispose();
     }
 }
