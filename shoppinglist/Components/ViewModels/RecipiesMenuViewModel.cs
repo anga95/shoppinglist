@@ -26,8 +26,8 @@ public class RecipiesMenuViewModel : ViewModelBase
         _events.ItemsChanged += OnEventsChanged;
     }
 
+    private Task OnEventsChanged() => Reload();
 
-    private async Task OnEventsChanged() => await Reload();
 
     public async Task InitAsync()
     {

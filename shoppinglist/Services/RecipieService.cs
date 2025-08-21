@@ -92,18 +92,19 @@ public class RecipieService
         
         _db.Recipies.Remove(recipie);
         await _db.SaveChangesAsync();
+        await _events.RaiseRecipiesChangedAsync();
 
-        await _events.RaiseRecipiesChanged();
     }
 
     public async Task SetItemCheckedAsync(int itemId, bool value)
     {
         var it = await _db.Items.FindAsync(itemId);
         if (it is null) return;
-        
+
         it.IsChecked = value;
         it.MovedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
-        await _events.RaiseItemsChanged();
+        await _events.RaiseItemsChangedAsync();
+
     }
 }
