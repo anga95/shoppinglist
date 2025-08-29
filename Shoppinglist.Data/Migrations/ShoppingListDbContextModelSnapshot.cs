@@ -41,7 +41,7 @@ namespace Shoppinglist.Data.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Shoppinglist.Data.Models.Recipie", b =>
+            modelBuilder.Entity("Shoppinglist.Data.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,25 +53,25 @@ namespace Shoppinglist.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipies");
+                    b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("Shoppinglist.Data.Models.RecipieItem", b =>
+            modelBuilder.Entity("Shoppinglist.Data.Models.RecipeItem", b =>
                 {
-                    b.Property<int>("RecipieId")
+                    b.Property<int>("RecipeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ItemId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("RecipieId", "ItemId");
+                    b.HasKey("RecipeId", "ItemId");
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("RecipieItems");
+                    b.ToTable("RecipeItems");
                 });
 
-            modelBuilder.Entity("Shoppinglist.Data.Models.RecipieItem", b =>
+            modelBuilder.Entity("Shoppinglist.Data.Models.RecipeItem", b =>
                 {
                     b.HasOne("Shoppinglist.Data.Models.Item", "Item")
                         .WithMany()
@@ -79,20 +79,20 @@ namespace Shoppinglist.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shoppinglist.Data.Models.Recipie", "Recipie")
-                        .WithMany("RecipieItems")
-                        .HasForeignKey("RecipieId")
+                    b.HasOne("Shoppinglist.Data.Models.Recipe", "Recipe")
+                        .WithMany("RecipeItems")
+                        .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Item");
 
-                    b.Navigation("Recipie");
+                    b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Shoppinglist.Data.Models.Recipie", b =>
+            modelBuilder.Entity("Shoppinglist.Data.Models.Recipe", b =>
                 {
-                    b.Navigation("RecipieItems");
+                    b.Navigation("RecipeItems");
                 });
 #pragma warning restore 612, 618
         }

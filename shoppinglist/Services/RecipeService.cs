@@ -8,19 +8,19 @@ using Shoppinglist.Data.Models;
 
 namespace shoppinglist.Services;
 
-public class RecipieService
+public class RecipeService
 {
     private readonly ShoppingListDbContext _db;
     private readonly AppEvents _events;
-    public RecipieService(ShoppingListDbContext db, AppEvents events)
+    public RecipeService(ShoppingListDbContext db, AppEvents events)
     {
         _db = db;
         _events = events;
     }
     
-    public Task<List<Recipie>> GetAllWithItemsAsync() =>
-        _db.Recipies
-            .Include(r => r.RecipieItems)
+    public Task<List<Recipe>> GetAllWithItemsAsync() =>
+        _db.Recipes
+            .Include(r => r.RecipeItems)
             .ThenInclude(ri => ri.Item)
             .OrderBy(r => r.Title)
             .ToListAsync();
@@ -31,8 +31,8 @@ public class RecipieService
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentException("Title cannot be empty");
         
-        Recipie recipie = new Recipie {Title = title};
-        _db.Recipies.Add(recipie);
+        Recipe recipe = new Recipe {Title = title};
+        _db.Recipes.Add(recipe);
         await _db.SaveChangesAsync();
         
         var names = itemNames
@@ -61,38 +61,38 @@ public class RecipieService
 
         var allItems = existing.Concat(newItems).ToList();
         
-        var linksToAdd = new List<RecipieItem>();
+        var linksToAdd = new List<RecipeItem>();
         foreach (var item in allItems)
         {
-            bool exists = await _db.RecipieItems
-                .AnyAsync(ri => ri.RecipieId == recipie.Id && ri.ItemId == item.Id);
+            bool exists = await _db.RecipeItems
+                .AnyAsync(ri => ri.RecipeId == recipe.Id && ri.ItemId == item.Id);
                                 
             
             if (!exists)
-                linksToAdd.Add(new RecipieItem
+                linksToAdd.Add(new RecipeItem
                 {
-                    RecipieId = recipie.Id,
+                    RecipeId = recipe.Id,
                     ItemId = item.Id
                 });
         }
 
         if (linksToAdd.Count > 0)
         {
-            _db.RecipieItems.AddRange(linksToAdd);
+            _db.RecipeItems.AddRange(linksToAdd);
             await _db.SaveChangesAsync();
         }
     }
     
-    public async Task DeleteAsync(int recipieId)
+    public async Task DeleteAsync(int recipeId)
     {
-        Recipie? recipie = await _db.Recipies
-            .Include(x => x.RecipieItems)
-            .FirstOrDefaultAsync(x => x.Id == recipieId);
+        Recipe? recipie = await _db.Recipes
+            .Include(x => x.RecipeItems)
+            .FirstOrDefaultAsync(x => x.Id == recipeId);
         if (recipie is null) return;
         
-        _db.Recipies.Remove(recipie);
+        _db.Recipes.Remove(recipie);
         await _db.SaveChangesAsync();
-        await _events.RaiseRecipiesChangedAsync();
+        await _events.RaiseRecipesChangedAsync();
     }
 
     public async Task SetItemCheckedAsync(int itemId, bool value)

@@ -8,8 +8,8 @@ public class ShoppingListDbContext : DbContext
     public ShoppingListDbContext(DbContextOptions<ShoppingListDbContext> options) : base(options) { }
 
     public DbSet<Item> Items => Set<Item>();
-    public DbSet<Recipie> Recipies => Set<Recipie>();
-    public DbSet<RecipieItem> RecipieItems => Set<RecipieItem>();
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+    public DbSet<RecipeItem> RecipeItems => Set<RecipeItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,16 +17,16 @@ public class ShoppingListDbContext : DbContext
             .HasIndex(i => i.Name)
             .IsUnique();
 
-        modelBuilder.Entity<RecipieItem>()
-            .HasKey(ri => new { ri.RecipieId, ri.ItemId });
+        modelBuilder.Entity<RecipeItem>()
+            .HasKey(ri => new { RecipieId = ri.RecipeId, ri.ItemId });
 
-        modelBuilder.Entity<RecipieItem>()
-            .HasOne(ri => ri.Recipie)
-            .WithMany(r => r.RecipieItems)
-            .HasForeignKey(ri => ri.RecipieId)
+        modelBuilder.Entity<RecipeItem>()
+            .HasOne(ri => ri.Recipe)
+            .WithMany(r => r.RecipeItems)
+            .HasForeignKey(ri => ri.RecipeId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<RecipieItem>()
+        modelBuilder.Entity<RecipeItem>()
             .HasOne(ri => ri.Item)
             .WithMany()
             .HasForeignKey(ri => ri.ItemId)

@@ -6,10 +6,10 @@ namespace shoppinglist.Services;
 
 public class AppEvents
 {
-    public event Func<Task>? RecipiesChanged;
+    public event Func<Task>? RecipesChanged;
     public event Func<Task>? ItemsChanged;
 
-    public Task RaiseRecipiesChangedAsync() => InvokeAsync(RecipiesChanged);
+    public Task RaiseRecipesChangedAsync() => InvokeAsync(RecipesChanged);
     public Task RaiseItemsChangedAsync() => InvokeAsync(ItemsChanged);
 
     // Invoke each subscribed handler and wait for all to complete. Using

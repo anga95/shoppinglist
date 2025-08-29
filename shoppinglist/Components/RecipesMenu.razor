@@ -1,6 +1,6 @@
 @using shoppinglist.Components.ViewModels
 @using shoppinglist.Services
-@inject RecipiesMenuViewModel VM
+@inject RecipesMenuViewModel VM
 
 <button class="btn btn-outline-light" @onclick="VM.ToggleMenu">Recept ▼</button>
 
@@ -8,13 +8,13 @@
 {
     <div class="rec-backdrop" @onclick="VM.CloseMenu"></div>
     <div class="rec-menu" @onclick:stopPropagation="true">
-        @if (VM.Recipies.Count == 0)
+        @if (VM.Recipes.Count == 0)
         {
             <div class="p-2 text-muted">Inga recept ännu</div>
         }
         else
         {
-            @foreach (var r in VM.Recipies)
+            @foreach (var r in VM.Recipes)
             {
                 <div class="rec-item">
                     <div class="rec-head" @onclick="() => VM.ToggleRec(r.Id)">
@@ -24,7 +24,7 @@
 
                     @if (VM.Expanded.Contains(r.Id))
                     {
-                        var items = r.RecipieItems.Select(ri => ri.Item).OrderForDisplay();
+                        var items = r.RecipeItems.Select(ri => ri.Item).OrderForDisplay();
                         <ul class="rec-ingredients">
                             @foreach (var it in items)
                             {

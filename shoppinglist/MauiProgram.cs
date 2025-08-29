@@ -29,9 +29,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<AppEvents>();
         builder.Services.AddScoped<ShoppingListService>();
-        builder.Services.AddScoped<RecipieService>();
+        builder.Services.AddScoped<RecipeService>();
         builder.Services.AddScoped<HomeViewModel>();
-        builder.Services.AddScoped<RecipiesMenuViewModel>();
+        builder.Services.AddScoped<RecipesMenuViewModel>();
 
         builder.Services.AddMauiBlazorWebView();
 

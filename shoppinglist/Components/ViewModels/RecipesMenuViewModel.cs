@@ -7,22 +7,22 @@ using shoppinglist.Services;
 
 namespace shoppinglist.Components.ViewModels;
 
-public class RecipiesMenuViewModel : ViewModelBase
+public class RecipesMenuViewModel : ViewModelBase
 {
-    private readonly RecipieService _recipies;
+    private readonly RecipeService _recipes;
     private readonly ShoppingListService _shoppingList;
     private readonly AppEvents _events;
 
-    public List<Recipie> Recipies { get; private set; } = new();
+    public List<Recipe> Recipes { get; private set; } = new();
     public HashSet<int> Expanded { get; } = new();
     public bool Open { get; private set; }
 
-    public RecipiesMenuViewModel(RecipieService recipies, ShoppingListService shopping, AppEvents events) : base()
+    public RecipesMenuViewModel(RecipeService recipes, ShoppingListService shopping, AppEvents events) : base()
     {
-        _recipies = recipies;
+        _recipes = recipes;
         _shoppingList = shopping;
         _events = events;
-        _events.RecipiesChanged += OnEventsChanged;
+        _events.RecipesChanged += OnEventsChanged;
         _events.ItemsChanged += OnEventsChanged;
     }
 
@@ -30,7 +30,7 @@ public class RecipiesMenuViewModel : ViewModelBase
 
     public async Task InitAsync()
     {
-        Recipies = await _recipies.GetAllWithItemsAsync();
+        Recipes = await _recipes.GetAllWithItemsAsync();
         RaiseChanged();
     }
 
@@ -51,13 +51,13 @@ public class RecipiesMenuViewModel : ViewModelBase
 
     private async Task Reload()
     {
-        Recipies = await _recipies.GetAllWithItemsAsync();
+        Recipes = await _recipes.GetAllWithItemsAsync();
         RaiseChanged();
     }
     
     public override void Dispose()
     {
-        _events.RecipiesChanged -= OnEventsChanged;
+        _events.RecipesChanged -= OnEventsChanged;
         _events.ItemsChanged -= OnEventsChanged;
         base.Dispose();
     }

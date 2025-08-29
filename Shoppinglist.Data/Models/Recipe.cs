@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace Shoppinglist.Data.Models;
 
-public class Recipie
+public class Recipe
 {
     public int Id { get; set; }
     public string Title { get; set; } = "";
 
-    public List<RecipieItem> RecipieItems { get; set; } = new();
+    public List<RecipeItem> RecipeItems { get; set; } = new();
 }
