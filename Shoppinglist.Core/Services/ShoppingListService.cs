@@ -8,8 +8,8 @@ namespace Shoppinglist.Core.Services;
 public class ShoppingListService
 {
     private readonly ShoppingListDbContext _db;
-    private readonly AppEvents _events;
-    public ShoppingListService(ShoppingListDbContext db, AppEvents events)
+    private readonly IAppEvents _events;
+    public ShoppingListService(ShoppingListDbContext db, IAppEvents events)
     {
         _db = db;
         _events = events;
