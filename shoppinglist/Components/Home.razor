@@ -12,15 +12,17 @@
     <span>@VM.Status</span>
 </div>
 
-<ul>
+<ul class="shopping-list">
     @foreach (var item in VM.Items)
     {
-        <li style="display:flex;align-items:center;gap:.5rem">
-            <input type="checkbox"
-                   @bind="item.IsChecked"
-                   @bind:after="async () => await VM.ToggleAsync(item)" />
-            <span>@item.Name</span>
-            <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
+        <li>
+            <div class="item-row">
+                <input type="checkbox"
+                       @bind="item.IsChecked"
+                       @bind:after="async () => await VM.ToggleAsync(item)" />
+                <span class="@(item.IsChecked ? "checked" : null)">@item.Name</span>
+                <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
+            </div>
         </li>
     }
 </ul>
