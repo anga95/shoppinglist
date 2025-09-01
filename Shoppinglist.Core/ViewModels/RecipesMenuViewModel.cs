@@ -1,23 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Shoppinglist.Core.Events;
+using Shoppinglist.Core.Services;
 using Shoppinglist.Data.Models;
-using shoppinglist.Services;
 
-namespace shoppinglist.Components.ViewModels;
+namespace Shoppinglist.Core.ViewModels;
 
 public class RecipesMenuViewModel : ViewModelBase
 {
     private readonly RecipeService _recipes;
     private readonly ShoppingListService _shoppingList;
-    private readonly AppEvents _events;
+    private readonly IAppEvents _events;
 
     public List<Recipe> Recipes { get; private set; } = new();
     public HashSet<int> Expanded { get; } = new();
     public bool Open { get; private set; }
 
-    public RecipesMenuViewModel(RecipeService recipes, ShoppingListService shopping, AppEvents events) : base()
+    public RecipesMenuViewModel(RecipeService recipes, ShoppingListService shopping, IAppEvents events) : base()
     {
         _recipes = recipes;
         _shoppingList = shopping;

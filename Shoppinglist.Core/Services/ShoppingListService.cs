@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Shoppinglist.Core.Events;
 using Shoppinglist.Data;
 using Shoppinglist.Data.Models;
 
-namespace shoppinglist.Services;
+namespace Shoppinglist.Core.Services;
 
 public class ShoppingListService
 {

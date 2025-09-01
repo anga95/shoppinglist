@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shoppinglist", "shoppinglist\shoppinglist.csproj", "{DC30DC75-E003-47A9-8629-CAA1D663138B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shoppinglist.Data", "Shoppinglist.Data\Shoppinglist.Data.csproj", "{43E70DCB-0023-4A47-B439-F95212AD4A78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shoppinglist.Tests", "Shoppinglist.Tests\Shoppinglist.Tests.csproj", "{0214053E-C65C-4540-AD07-639D4BDC6229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shoppinglist.Core", "Shoppinglist.Core\Shoppinglist.Core.csproj", "{CFC1FB80-43DE-4DA2-96B7-44C45F0E1ADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,5 +23,13 @@ Global
 		{43E70DCB-0023-4A47-B439-F95212AD4A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43E70DCB-0023-4A47-B439-F95212AD4A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43E70DCB-0023-4A47-B439-F95212AD4A78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0214053E-C65C-4540-AD07-639D4BDC6229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0214053E-C65C-4540-AD07-639D4BDC6229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0214053E-C65C-4540-AD07-639D4BDC6229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0214053E-C65C-4540-AD07-639D4BDC6229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFC1FB80-43DE-4DA2-96B7-44C45F0E1ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFC1FB80-43DE-4DA2-96B7-44C45F0E1ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFC1FB80-43DE-4DA2-96B7-44C45F0E1ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFC1FB80-43DE-4DA2-96B7-44C45F0E1ADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

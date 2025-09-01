@@ -1,14 +1,9 @@
-﻿using System;
-using System.IO;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Hosting;
-using Microsoft.Maui.Hosting;
-using Microsoft.Maui.Storage;
-using shoppinglist.Components.ViewModels;
+using Shoppinglist.Core.ViewModels;
+using Shoppinglist.Core.Events;
+using Shoppinglist.Core.Services;
 using Shoppinglist.Data;
-using shoppinglist.Services;
 
 namespace shoppinglist;
 
@@ -27,7 +22,7 @@ public static class MauiProgram
         builder.Services.AddDbContext<ShoppingListDbContext>(options =>
             options.UseSqlite($"Data Source={dbPath}"));
 
-        builder.Services.AddSingleton<AppEvents>();
+        builder.Services.AddSingleton<IAppEvents, AppEvents>();
         builder.Services.AddScoped<ShoppingListService>();
         builder.Services.AddScoped<RecipeService>();
         builder.Services.AddScoped<HomeViewModel>();

@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Shoppinglist.Data.Models;
 
-namespace shoppinglist.Services;
+namespace Shoppinglist.Core.Services;
 
 public static class ItemOrdering
 {

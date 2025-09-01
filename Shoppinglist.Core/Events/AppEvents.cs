@@ -1,10 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Shoppinglist.Core.Events;
 
-namespace shoppinglist.Services;
-
-public class AppEvents
+public class AppEvents : IAppEvents
 {
     public event Func<Task>? RecipesChanged;
     public event Func<Task>? ItemsChanged;
@@ -18,6 +14,7 @@ public class AppEvents
     private static async Task InvokeAsync(Func<Task>? handlers)
     {
         if (handlers is null) return;
+        
         var tasks = handlers.GetInvocationList()
             .Cast<Func<Task>>()
             .Select(h =>
@@ -25,6 +22,7 @@ public class AppEvents
                 try { return h(); }
                 catch (Exception ex) { return Task.FromException(ex); }
             });
+        
         await Task.WhenAll(tasks);
     }
 }

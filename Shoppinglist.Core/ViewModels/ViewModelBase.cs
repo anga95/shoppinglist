@@ -1,6 +1,4 @@
-using System;
-
-namespace shoppinglist.Components.ViewModels;
+namespace Shoppinglist.Core.ViewModels;
 
 public abstract class ViewModelBase : IDisposable
 {

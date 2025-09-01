@@ -59,6 +59,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Shoppinglist.Core\Shoppinglist.Core.csproj" />
       <ProjectReference Include="..\Shoppinglist.Data\Shoppinglist.Data.csproj"
                         AdditionalProperties="TargetFramework=net8.0" />
     </ItemGroup>
