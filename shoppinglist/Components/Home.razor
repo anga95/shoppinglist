@@ -1,14 +1,33 @@
 ﻿@page "/"
 @using Shoppinglist.Core.Events
 @inject Shoppinglist.Core.ViewModels.HomeViewModel VM
-@inject AppEvents Events
+@inject IAppEvents Events
 
 <h3>Inköpslista</h3>
 
-<div style="display:flex;gap:.5rem;align-items:center">
-    <input @bind="VM.NewName" @bind:event="oninput" placeholder="Lägg till vara..." />
-    <button class="btn btn-primary" @onclick="VM.AddAsync" disabled="@string.IsNullOrWhiteSpace(VM.NewName)">Lägg till</button>
-    <span>@VM.Status</span>
+<div class="d-flex flex-column gap-2 mb-2">
+    <div class="d-flex gap-2 align-items-stretch">
+        <input class="form-control"
+               @bind="VM.NewName"
+               @bind:event="oninput"
+               placeholder="Lägg till vara..."/>
+
+        <button class="btn btn-primary"
+                @onclick="VM.AddAsync"
+                disabled="@string.IsNullOrWhiteSpace(VM.NewName)">
+            Lägg till
+        </button>    
+    </div>
+
+    <div class="status-slot">
+        @if (!string.IsNullOrWhiteSpace(VM.Status))
+        {
+            <div class="text-muted small">
+                @VM.Status
+            </div>
+        }    
+    </div>
+    
 </div>
 
 <ul class="shopping-list">

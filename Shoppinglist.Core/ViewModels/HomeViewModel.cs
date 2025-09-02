@@ -29,13 +29,16 @@ public class HomeViewModel : ViewModelBase
     public async Task AddAsync()
     {
         var added = await _service.AddAsync(NewName);
-        Status = added is null ? "Tomt eller dubblett." : $"Lade till '{added.Name}'.";
+        /*Status = added is null ? "Tomt eller dubblett." : $"Lade till '{added.Name}'.";*/
+
+        if (added is null)
+            await ShowStatusAsync("Tomt eller dubblett.");
+        else
+            await ShowStatusAsync($"Lade till '{added.Name}'.");
+        
         if (added is not null)
         {
             NewName = "";
-            Items.Add(added);
-            Items = Items.OrderForDisplay().ToList();
-            RaiseChanged();
         }
     }
 
@@ -82,6 +85,15 @@ public class HomeViewModel : ViewModelBase
             Status = $"Fel vid uppdatering: {ex.Message}";
             RaiseChanged();
         }
+    }
+
+    public async Task ShowStatusAsync(string message, int durationMs = 2000)
+    {
+        Status = message;
+        RaiseChanged();
+        await Task.Delay(durationMs);
+        Status = "";
+        RaiseChanged();
     }
     
     public override void Dispose()

@@ -1,5 +1,5 @@
 .shopping-list {
-    list-style-position: inside;
+    list-style-type: none;
     padding-left: 0;
     margin-left: 0;
 }
@@ -14,3 +14,5 @@
     text-decoration: line-through;
     color: #6c757d;
 }
+
+.status-slot { min-height: 2rem; }

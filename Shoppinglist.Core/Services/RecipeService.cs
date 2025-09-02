@@ -8,8 +8,8 @@ namespace Shoppinglist.Core.Services;
 public class RecipeService
 {
     private readonly ShoppingListDbContext _db;
-    private readonly AppEvents _events;
-    public RecipeService(ShoppingListDbContext db, AppEvents events)
+    private readonly IAppEvents _events;
+    public RecipeService(ShoppingListDbContext db, IAppEvents events)
     {
         _db = db;
         _events = events;
@@ -38,7 +38,11 @@ public class RecipeService
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        if (names.Count == 0) return;
+        if (names.Count == 0)
+        {
+            await _events.RaiseRecipesChangedAsync();
+            return;
+        }
         
         var existing = await _db.Items
             .Where(i => names.Contains(i.Name))
@@ -78,6 +82,7 @@ public class RecipeService
             _db.RecipeItems.AddRange(linksToAdd);
             await _db.SaveChangesAsync();
         }
+        await _events.RaiseRecipesChangedAsync();
     }
     
     public async Task DeleteAsync(int recipeId)

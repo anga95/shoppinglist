@@ -3,7 +3,7 @@
 @using Shoppinglist.Core.Services
 @inject RecipeService Recipes
 @inject NavigationManager Nav
-@inject AppEvents Events
+@inject IAppEvents Events
 
 <h3>Nytt recept</h3>
 
@@ -67,7 +67,6 @@
         }
 
         await Recipes.CreateWithItemsAsync(_title, names);
-        await Events.RaiseRecipesChangedAsync();
 
         Nav.NavigateTo("/");
     }
