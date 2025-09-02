@@ -18,7 +18,7 @@ public class ShoppingListDbContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<RecipeItem>()
-            .HasKey(ri => new { RecipieId = ri.RecipeId, ri.ItemId });
+            .HasKey(ri => new { ri.RecipeId, ri.ItemId });
 
         modelBuilder.Entity<RecipeItem>()
             .HasOne(ri => ri.Recipe)
