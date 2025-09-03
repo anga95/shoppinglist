@@ -10,7 +10,13 @@
         <input class="form-control"
                @bind="VM.NewName"
                @bind:event="oninput"
-               placeholder="Lägg till vara..."/>
+               placeholder="Lägg till vara..."
+               autocorrect="off"
+               autocapitalize="off"
+               spellcheck="false"
+               inputmode="text"
+               enterkeyhint="done"
+               />
 
         <button class="btn btn-primary"
                 @onclick="VM.AddAsync"

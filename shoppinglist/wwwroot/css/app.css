@@ -65,8 +65,7 @@ h1:focus {
         content: "An error has occurred."
     }
 
-.status-bar-safe-area {
-    display: none;
+.status-bar-safe-area {    display: none;
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -84,3 +83,4 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+
