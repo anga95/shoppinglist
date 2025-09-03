@@ -24,10 +24,23 @@ public class ShoppingListService
     {
         var trimmed = name?.Trim() ?? "";
         if (string.IsNullOrWhiteSpace(trimmed)) return null;
-        if (await _db.Items.AnyAsync(x => x.Name == trimmed)) return null;
+        
+        var itemAlreadyExists = await _db.Items.FirstOrDefaultAsync(x => x.Name == trimmed);
+        if (itemAlreadyExists is not null)
+        {
+            if (itemAlreadyExists.IsChecked)
+            {
+                itemAlreadyExists.IsChecked = false;
+                itemAlreadyExists.MovedAt = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
+                await _events.RaiseItemsChangedAsync();
+            }
+            return itemAlreadyExists;
+        }
 
         var item = new Item { Name = trimmed, IsChecked = false };
         _db.Items.Add(item);
+        
         await _db.SaveChangesAsync();
         await _events.RaiseItemsChangedAsync();
         return item;

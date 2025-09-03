@@ -29,16 +29,15 @@ public class HomeViewModel : ViewModelBase
     public async Task AddAsync()
     {
         var added = await _service.AddAsync(NewName);
-        /*Status = added is null ? "Tomt eller dubblett." : $"Lade till '{added.Name}'.";*/
 
         if (added is null)
-            await ShowStatusAsync("Tomt eller dubblett.");
+        {
+            await ShowStatusAsync("Tomt namn.");
+        }
         else
-            await ShowStatusAsync($"Lade till '{added.Name}'.");
-        
-        if (added is not null)
         {
             NewName = "";
+            await ShowStatusAsync($"'{added.Name}' tillagd.");
         }
     }
 

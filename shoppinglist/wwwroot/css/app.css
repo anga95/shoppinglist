@@ -1,10 +1,13 @@
-﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿html, body { height: 100%; margin: 0; }
+#app      { min-height: 100dvh; }
+
+body{
+    font-family:-apple-system, BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color: #000;
+    background: #f2f2f7;
 }
 
-a, .btn-link {
-    color: #006bb7;
-}
+a, .btn-link { color: #0a84ff; }
 
 .btn-primary {
     color: #fff;
@@ -16,9 +19,8 @@ a, .btn-link {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.content {
-    padding-top: 1.1rem;
-}
+.content { padding-top: 0 !important; }
+
 
 h1:focus {
     outline: none;
@@ -30,6 +32,16 @@ h1:focus {
 
 .invalid {
     outline: 1px solid #e50000;
+}
+.top-row {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px)); /* lägg den direkt under statusfältet */
+    left: 0; right: 0;
+    height: var(--nav-h);
+    display:flex; align-items:center;
+    background: transparent;
+    z-index: 900;
+    padding: 0 12px;
 }
 
 .validation-message {
@@ -65,7 +77,13 @@ h1:focus {
         content: "An error has occurred."
     }
 
-.status-bar-safe-area {    display: none;
+.status-bar-safe-area{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: env(safe-area-inset-top, 0px);
+    pointer-events: none;
+    z-index: 1000;
+    background: transparent;
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -83,4 +101,243 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+.safe-overlay{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: env(safe-area-inset-top, 0px);
+    background: var(--bg);   /* samma som topbarens bakgrund */
+    z-index: 905;            /* över innehåll, under ev. system UI */
+    pointer-events: none;    /* ska inte få klick */
+}
+.topbar {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px));
+    left: 0; right: 0;
+    z-index: 900;
+    background: var(--bg);
+    padding: 8px 12px 10px;
+    box-shadow: 0 0 0 0.5px rgba(0,0,0,0.04);
+    border-bottom: 1px solid var(--sep);
+}
 
+/* Rad 1: RecipesMenu | Titel | Knapp */
+.topbar .row1 {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+}
+.topbar .title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-align: center;
+    justify-self: center;
+    flex: 1;
+}
+.topbar .row1 .title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--tint);
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+/* Rad 2: Input + Lägg till-knapp */
+.topbar .row2 {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    margin-top: 8px;
+}
+.topbar .top-input {
+    flex: 1;
+    font-size: 16px;
+    background: #fff;
+    border: none; outline: none;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.topbar .btn {
+    border-radius: 10px;
+    padding: 8px 12px;
+    line-height: 1;
+}
+
+.topbar .btn-outline-light{
+    color: #111;
+    border-color: rgba(0,0,0,.18);
+    background: rgba(255,255,255,.78);
+    backdrop-filter: saturate(180%) blur(10px);
+}
+
+.topbar .btn-outline-light:hover{
+    background: rgba(255,255,255,.95);
+    border-color: rgba(0,0,0,.22);
+}
+
+.topbar .btn-outline-light:active{
+    background: rgba(255,255,255,.88);
+}
+
+/* Dark mode-variant för bra kontrast */
+@media (prefers-color-scheme: dark){
+    .topbar .btn-outline-light{
+        color: #fff;
+        background: rgba(44,44,46,.55);
+        border-color: rgba(255,255,255,.18);
+    }
+    .topbar .btn-outline-light:hover{
+        background: rgba(58,58,60,.7);
+    }
+    .topbar .btn-outline-light:active{
+        background: rgba(58,58,60,.6);
+    }
+}
+
+/* Se till att pilen “▼” följer textfärgen */
+.topbar .btn-outline-light span,
+.topbar .btn-outline-light { color: inherit; }
+
+:root{
+    --bg:        #f2f2f7;          /* iOS grouped background */
+    --card:      #fff;
+    --text:      #000;
+    --subtext:   #6c6c70;
+    --sep:       rgba(60,60,67,.29);
+    --tint:      #0a84ff;          /* iOS blå */
+    --radius:    12px;
+    --nav-h:     44px;
+    --topbar-h: 0px;
+}
+
+@media (prefers-color-scheme: dark){
+    :root{
+        --bg:#000; --card:#1c1c1e; --text:#fff; --subtext:#98989f; --sep: rgba(84,84,88,.65);
+        --tint:#0a84ff; /* iOS blå håller ofta samma i dark */
+    }
+}
+
+html,body{height:100%;}
+body{
+    margin:0;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color:var(--text);
+    background:var(--bg);
+}
+
+.ios-container {
+    padding-top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h) + 8px);
+}
+.ios-container > :first-child { margin-top: 0; }
+
+.ios-header{
+    position: sticky;
+    top: calc(env(safe-area-inset-top,0px) + var(--nav-h));
+    background: var(--bg);
+    z-index: 50;
+    padding-bottom: 8px;
+}
+.ios-header::after {
+    content: "";
+    display: block;
+    height: 0.5px;
+    background: var(--sep);
+    margin-top: 8px;
+}
+
+/* Large Title (Notes-känsla) */
+.ios-large-title{
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+}
+
+/* Sökfält i iOS-stil */
+.ios-search{
+    display:flex; align-items:center; gap:8px;
+    background: var(--card);
+    border-radius: 10px;
+    padding: 8px 10px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+    margin-bottom: 12px;
+}
+.ios-search input{
+    border:none; outline:none; background:transparent; width:100%;
+    font-size:16px; color:var(--text);
+}
+
+/* Grouped-list kort */
+.ios-group{
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden; /* så separators klipps */
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 0 0 0.5px rgba(0,0,0,0.04);
+    margin-top: 0;
+}
+
+/* En "cell" i listan */
+.ios-cell{
+    display:flex; align-items:center; gap:10px;
+    padding: 12px 14px;
+    position: relative;
+}
+.ios-cell:not(:last-child)::after{
+    content:"";
+    position:absolute; left:14px; right:0; bottom:0;
+    height:0.5px; background: var(--sep);
+}
+
+/* Checkbox och textlayout */
+.ios-cell input[type="checkbox"]{
+    width:20px; height:20px; accent-color: var(--tint);
+}
+.ios-title{ flex:1; font-size:17px; }
+.ios-title.checked{ color:var(--subtext); text-decoration: line-through; }
+
+/* Chevron (”>”) till höger, valfritt */
+.ios-chevron{
+    font-size:20px; line-height:1; color:var(--subtext);
+    padding-left: 6px;
+}
+
+/* Primär knapp i iOS-stil men enkel */
+.btn-primary{
+    background: var(--tint); color:#fff; border:none; border-radius: 10px;
+    padding: 10px 14px; font-weight:600;
+}
+
+/* Inmatningsrad (lägg till) */
+.ios-inline{
+    display:flex; gap:8px; align-items:stretch; margin: 12px 0;
+}
+.ios-inline input{
+    background: var(--card);
+    border-radius: 10px; border: none; outline: none;
+    padding: 10px 12px; font-size:16px; flex:1;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* Liten toast status (overlay, påverkar ej layout) */
+.toast-fixed{
+    position: fixed;
+    left: 12px; right: 12px;
+    top: calc(env(safe-area-inset-top, 0px) + 8px);
+    z-index: 1100;
+    padding: .6rem .8rem;
+    border-radius: .8rem;
+    background: rgba(0,0,0,.85);
+    color: #fff;
+    font-size: 0.95rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,.2);
+}

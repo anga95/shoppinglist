@@ -3,53 +3,28 @@
 @inject Shoppinglist.Core.ViewModels.HomeViewModel VM
 @inject IAppEvents Events
 
-<h3>Inköpslista</h3>
-
-<div class="d-flex flex-column gap-2 mb-2">
-    <div class="d-flex gap-2 align-items-stretch">
-        <input class="form-control"
-               @bind="VM.NewName"
-               @bind:event="oninput"
-               placeholder="Lägg till vara..."
-               autocorrect="off"
-               autocapitalize="off"
-               spellcheck="false"
-               inputmode="text"
-               enterkeyhint="done"
-               />
-
-        <button class="btn btn-primary"
-                @onclick="VM.AddAsync"
-                disabled="@string.IsNullOrWhiteSpace(VM.NewName)">
-            Lägg till
-        </button>    
-    </div>
-
-    <div class="status-slot">
-        @if (!string.IsNullOrWhiteSpace(VM.Status))
-        {
-            <div class="text-muted small">
-                @VM.Status
-            </div>
-        }    
-    </div>
+<div class="ios-container">
     
-</div>
-
-<ul class="shopping-list">
-    @foreach (var item in VM.Items)
-    {
-        <li>
-            <div class="item-row">
+    <div class="ios-group">
+        @foreach (var item in VM.Items)
+        {
+            <div class="ios-cell">
                 <input type="checkbox"
                        @bind="item.IsChecked"
                        @bind:after="async () => await VM.ToggleAsync(item)" />
-                <span class="@(item.IsChecked ? "checked" : null)">@item.Name</span>
+                <div class="ios-title @(item.IsChecked ? "checked" : null)">@item.Name</div>
+                <!-- valfri chevron: <div class="ios-chevron">›</div> -->
                 <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
             </div>
-        </li>
+        }
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(VM.Status))
+    {
+        <div class="toast-fixed" role="status" aria-live="polite">@VM.Status</div>
     }
-</ul>
+
+</div>
 
 @code {
 

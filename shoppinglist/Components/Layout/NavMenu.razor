@@ -1,18 +1,23 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid" style="display:flex; align-items:center; justify-content:space-between;">
-        <RecipesMenu />
-        <div></div>
+﻿@inject Shoppinglist.Core.ViewModels.HomeViewModel VM
+
+<div class="topbar">
+    <!-- row 1 -->
+    <div class="row1">
+        <div class="left"><RecipesMenu /></div>
+        <div class="title">Inköp</div>
+        <div style="width: 40px"> </div> <!-- placeholder for right side -->
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-    </nav>
+    <!-- row 2 -->
+    <div class="row2">
+        <input class="top-input"
+               @bind="VM.NewName"
+               @bind:event="oninput"
+               placeholder="Lägg till vara..."
+               autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <button class="btn-primary"
+                @onclick="VM.AddAsync"
+                disabled="@string.IsNullOrWhiteSpace(VM.NewName)">
+            Lägg till
+        </button>
+    </div>
 </div>
