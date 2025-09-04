@@ -13,11 +13,20 @@
                @bind="VM.NewName"
                @bind:event="oninput"
                placeholder="Lägg till vara..."
-               autocorrect="off" autocapitalize="off" spellcheck="false" />
-        <button class="btn-primary"
-                @onclick="VM.AddAsync"
-                disabled="@string.IsNullOrWhiteSpace(VM.NewName)">
-            Lägg till
-        </button>
+               autocorrect="off" 
+               autocapitalize="off" 
+               spellcheck="false"
+               enterkeyhint="done"
+               @onkeydown="HandleKey"/>
     </div>
 </div>
+
+@code {
+    private async Task HandleKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(VM.NewName))
+        {
+            await VM.AddAsync();
+        }
+    }
+}
