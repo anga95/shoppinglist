@@ -236,7 +236,7 @@ body{
 }
 
 .ios-container {
-    padding-top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h) + 8px);
+    padding-top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h, 92px) + 8px);
 }
 .ios-container > :first-child { margin-top: 0; }
 

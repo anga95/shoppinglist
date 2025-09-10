@@ -3,27 +3,25 @@
 @inject Shoppinglist.Core.ViewModels.HomeViewModel VM
 @inject IAppEvents Events
 
-<div class="ios-container">
     
-    <div class="ios-group">
-        @foreach (var item in VM.Items)
-        {
-            <div class="ios-cell">
-                <input type="checkbox"
-                       @bind="item.IsChecked"
-                       @bind:after="async () => await VM.ToggleAsync(item)" />
-                <div class="ios-title @(item.IsChecked ? "checked" : null)">@item.Name</div>
-                <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
-            </div>
-        }
-    </div>
-
-    @if (!string.IsNullOrWhiteSpace(VM.Status))
+<div class="ios-group">
+    @foreach (var item in VM.Items)
     {
-        <div class="toast-fixed" role="status" aria-live="polite">@VM.Status</div>
+        <div class="ios-cell">
+            <input type="checkbox"
+                   @bind="item.IsChecked"
+                   @bind:after="async () => await VM.ToggleAsync(item)" />
+            <div class="ios-title @(item.IsChecked ? "checked" : null)">@item.Name</div>
+            <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
+        </div>
     }
-
 </div>
+
+@if (!string.IsNullOrWhiteSpace(VM.Status))
+{
+    <div class="toast-fixed" role="status" aria-live="polite">@VM.Status</div>
+}
+
 
 @code {
 
