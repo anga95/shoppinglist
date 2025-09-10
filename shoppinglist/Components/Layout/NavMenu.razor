@@ -1,32 +1,101 @@
 ﻿@inject Shoppinglist.Core.ViewModels.HomeViewModel VM
+@inject NavigationManager Nav
+@implements IDisposable
 
 <div class="topbar">
     <!-- row 1 -->
     <div class="row1">
-        <div class="left"><RecipesMenu /></div>
-        <div class="title">Inköp</div>
+        <div class="left">
+            @if (_isHomePage)
+            {
+                <RecipesMenu />    
+            }
+            else
+            {
+                <button class="btn-link nav-cancel"
+                        @onclick="GoBack">
+                    Avbryt
+                </button>
+            }
+        </div>
+        <div class="title">@_title</div>
         <div style="width: 40px"> </div> <!-- placeholder for right side -->
     </div>
     <!-- row 2 -->
-    <div class="row2">
-        <input class="top-input"
-               @bind="VM.NewName"
-               @bind:event="oninput"
-               placeholder="Lägg till vara..."
-               autocorrect="off" 
-               autocapitalize="off" 
-               spellcheck="false"
-               enterkeyhint="done"
-               @onkeydown="HandleKey"/>
-    </div>
+    @if (_isHomePage)
+    {
+        <div class="row2">
+            <input class="top-input"
+                   @bind="VM.NewName"
+                   @bind:event="oninput"
+                   placeholder="Lägg till vara..."
+                   autocorrect="off" 
+                   autocapitalize="off" 
+                   spellcheck="false"
+                   enterkeyhint="done"
+                   @onkeydown="HandleKey"/>
+        </div>    
+    }
+    
 </div>
 
 @code {
+    private bool _isHomePage;
+    private string _title = "Inköp";
+
+    protected override void OnInitialized()
+    {
+        UpdateFromUri(Nav.Uri);
+        Nav.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        UpdateFromUri(e.Location);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateFromUri(string uri)
+    {
+        var path = new Uri(uri).AbsolutePath.TrimEnd('/');
+        _isHomePage = string.IsNullOrWhiteSpace(path) || path == "/";
+
+        if (_isHomePage)
+        {
+            _title = "Inköp";
+        }
+        else if (path.Equals("/recipes/new", StringComparison.OrdinalIgnoreCase))
+        {
+            _title = "Nytt Recept";
+        }
+        else
+        {
+            var seg = path
+                .Trim('/')
+                .Split('/', StringSplitOptions.RemoveEmptyEntries)
+                .FirstOrDefault() ?? "";
+            
+            _title = seg.Length > 0
+                ? char.ToUpper(seg[0]) + seg[1..] 
+                : "Sida";
+        }
+    }
+    
     private async Task HandleKey(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(VM.NewName))
         {
             await VM.AddAsync();
         }
+    }
+    
+    private void GoBack()
+    {
+        Nav.NavigateTo("/");
+    }
+    
+    public void Dispose()
+    {
+        Nav.LocationChanged -= OnLocationChanged;
     }
 }

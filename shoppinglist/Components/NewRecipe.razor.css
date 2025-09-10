@@ -1,0 +1,45 @@
+/* Ge sidan lite kantmarginal + safe areas (du hade redan ios-page i markup) */
+.ios-page {
+    padding-left: calc(env(safe-area-inset-left, 0px) + 16px);
+    padding-right: calc(env(safe-area-inset-right, 0px) + 16px);
+}
+
+/* Large title ska linjera med innehållet i kortet */
+.ios-page .ios-large-title {
+    padding-left: 8px;   /* matchar .ios-group:s inner-padding */
+    padding-right: 16px;
+    margin: 4px 0 12px;
+}
+
+/* Kortet (du har redan denna klass i app.css; vi adderar bara inre padding) */
+.ios-group {
+    padding: 12px 16px;   /* top/bottom 12, left/right 16 */
+    margin-top: 0;
+}
+
+/* Samma typografi för fältlabel och sektionstext */
+.ios-group label,
+.ios-group h5 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--text);
+}
+
+/* Lite extra luft mellan raderna i ingredienslistan */
+.ios-group .mb-2 { margin-bottom: 10px !important; }
+
+/* Gör inputs mer iOS-lika i kortet */
+.ios-group .form-control {
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.06);
+}
+
+/* Knappar inne i kortet – rundade och täta */
+.ios-group .btn {
+    border-radius: 10px;
+    padding: 8px 12px;
+}

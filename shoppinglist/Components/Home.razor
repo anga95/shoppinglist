@@ -13,7 +13,6 @@
                        @bind="item.IsChecked"
                        @bind:after="async () => await VM.ToggleAsync(item)" />
                 <div class="ios-title @(item.IsChecked ? "checked" : null)">@item.Name</div>
-                <!-- valfri chevron: <div class="ios-chevron">›</div> -->
                 <button class="btn btn-sm btn-outline-danger" @onclick="() => VM.DeleteAsync(item.Id)">x</button>
             </div>
         }

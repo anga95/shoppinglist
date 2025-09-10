@@ -8,6 +8,15 @@
 {
     <div class="rec-backdrop" @onclick="VM.CloseMenu"></div>
     <div class="rec-menu" @onclick:stopPropagation="true">
+        
+        <div class="p-2 d-flex">
+            <a class="btn btn-sm btn-outline-primary" 
+               href="/recipes/new" 
+               @onclick="VM.CloseMenu">
+               + Nytt Recept 
+            </a>
+        </div>
+        
         @if (VM.Recipes.Count == 0)
         {
             <div class="p-2 text-muted">Inga recept ännu</div>
@@ -31,7 +40,7 @@
                                 <li @key="it.Id">
                                     <input type="checkbox"
                                            @bind="@it.IsChecked"
-                                           @bind:after="async () =>  await VM.SetIngredientCheckedAsync(it)"/>
+                                           @bind:after="async () => await VM.SetIngredientCheckedAsync(it)"/>
                                     <span class="@(it.IsChecked ? "text-muted" : null)">@it.Name</span>
                                 </li>
                             }

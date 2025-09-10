@@ -99,3 +99,12 @@
         overflow-y: auto;
     }
 }
+
+.nav-cancel{
+    background: none;
+    border: none;
+    color: var(--tint);
+    font-weight: 600;
+    font-size: 17px;
+    padding: 4px 8px;
+}
